@@ -77,19 +77,19 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 #COPY ./src/composer.lock ./src/composer.json /var/www/
 
 # Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u $uid -d /home/$user $user
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
+#RUN useradd -G www-data,root -u $uid -d /home/$user $user
+#RUN mkdir -p /home/$user/.composer && \
+#    chown -R $user:$user /home/$user
 
 # Copy the applicaton code directory contents to the working directory
 COPY ./src /var/www
 
 # Set permissions of the working directory to the www-data user
 RUN chown -R www-data:www-data \ 
-    /var/www/viaticos/web/upload
+    /var/www/upload
 
 # Assign writing permissions to logs and framework directories
-RUN chmod 775 -R /var/www/viaticos/web/upload /var/www/plaguicidas/upload
+RUN chmod 775 -R /var/www/upload
 
 # Install project dependencies | --no-autoloader --no-ansi --no-interaction --no-progress --no-scripts
 # RUN composer install --optimize-autoloader --no-dev
