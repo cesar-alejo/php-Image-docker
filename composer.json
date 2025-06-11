@@ -1,0 +1,18 @@
+{
+    "name": "usuario/php-fpm",
+    "description": "image php-fpm",
+    "type": "image",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Usuario\\PhpFpm\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "cesar-alejo",
+            "email": "cesaralejo@gmail.com"
+        }
+    ],
+    "require": {}
+}

@@ -1,0 +1,70 @@
+# Ignorar directorios de vendor y node_modules
+/vendor
+/node_modules
+
+# Ignorar archivos de entorno
+.env
+.env.example
+
+# Ignorar archivos de almacenamiento y caché
+/storage/*.key
+/bootstrap/cache/*.php
+
+# Ignorar directorios de caché de Composer
+/vendor/composer/installed.json
+/vendor/composer/autoload_static.php
+
+# Ignorar logs
+/storage/logs/*.log
+
+# Ignorar los archivos generados por PHPUnit
+/.phpunit.result.cache
+
+# Ignorar archivos de IDE (si se usan)
+.idea/
+.vscode/
+.DS_Store
+npm-debug.log
+yarn-error.log
+
+# Ignorar los archivos de configuración del entorno local
+# Si tienes archivos de configuración específicos para tu entorno local,
+# puedes listarlos aquí. Por ejemplo:
+# config/database.php
+# config/services.php
+
+# Ignorar los archivos de compilación de frontend
+/public/hot
+/public/build
+/public/css
+/public/js
+
+# Ignorar los archivos de depuración
+*.sqlite
+*.log
+*.bak
+*.swp
+.vagrant/
+
+# Ignorar el directorio de caché de rutas
+/bootstrap/cache/routes-v7.php
+/bootstrap/cache/config.php
+/bootstrap/cache/services.php
+
+# Ignorar los archivos de mezcla de Webpack (si se usan)
+/mix-manifest.json
+
+# Ignorar el archivo de depuración de Composer
+composer.phar
+
+# Ignorar el archivo de reporte de errores
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+
+# Ignorar archivos específicos de Laravel
+Homestead.json
+Homestead.yaml
+!Homestead.yaml.example
+.env.*.local
+.env.backup
