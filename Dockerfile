@@ -1,7 +1,7 @@
 FROM php:8.3.22-fpm
 
 LABEL maintainer="cesaralejo@gmail.com"
-LABEL version="0.1"
+LABEL version="1.0.0"
 LABEL description="Imagen base PHP-FPM"
 
 # Arguments defined in docker-compose.yml
