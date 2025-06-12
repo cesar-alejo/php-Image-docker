@@ -9,7 +9,7 @@
 # Ignorar archivos de almacenamiento y caché
 /src/storage/*.key
 /src/bootstrap/cache/*.php
-/src/upload/*
+/src/upload/*.pdf
 
 # Ignorar directorios de caché de Composer
 /src/vendor/composer/installed.json
