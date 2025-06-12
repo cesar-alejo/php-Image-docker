@@ -1,21 +1,22 @@
 # Ignorar directorios de vendor y node_modules
-/vendor
-/node_modules
+/src/vendor
+/src/node_modules
 
 # Ignorar archivos de entorno
-.env
-.env.example
+/src/.env
+/src/.env.example
 
 # Ignorar archivos de almacenamiento y caché
-/storage/*.key
-/bootstrap/cache/*.php
+/src/storage/*.key
+/src/bootstrap/cache/*.php
+/src/upload/*
 
 # Ignorar directorios de caché de Composer
-/vendor/composer/installed.json
-/vendor/composer/autoload_static.php
+/src/vendor/composer/installed.json
+/src/vendor/composer/autoload_static.php
 
 # Ignorar logs
-/storage/logs/*.log
+/src/storage/logs/*.log
 
 # Ignorar los archivos generados por PHPUnit
 /.phpunit.result.cache
@@ -34,10 +35,10 @@ yarn-error.log
 # config/services.php
 
 # Ignorar los archivos de compilación de frontend
-/public/hot
-/public/build
-/public/css
-/public/js
+/src/public/hot
+/src/public/build
+/src/public/css
+/src/public/js
 
 # Ignorar los archivos de depuración
 *.sqlite
@@ -47,20 +48,20 @@ yarn-error.log
 .vagrant/
 
 # Ignorar el directorio de caché de rutas
-/bootstrap/cache/routes-v7.php
-/bootstrap/cache/config.php
-/bootstrap/cache/services.php
+/src/src/bootstrap/cache/routes-v7.php
+/src/src/bootstrap/cache/config.php
+/src/src/bootstrap/cache/services.php
 
 # Ignorar los archivos de mezcla de Webpack (si se usan)
-/mix-manifest.json
+/src/mix-manifest.json
 
 # Ignorar el archivo de depuración de Composer
-composer.phar
+/src/composer.phar
 
 # Ignorar el archivo de reporte de errores
-/storage/framework/cache/data/*
-/storage/framework/sessions/*
-/storage/framework/views/*
+/src/storage/framework/cache/data/*
+/src/storage/framework/sessions/*
+/src/storage/framework/views/*
 
 # Ignorar archivos específicos de Laravel
 Homestead.json

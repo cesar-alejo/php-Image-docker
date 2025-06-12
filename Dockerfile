@@ -1,116 +1,74 @@
-FROM php:8.3.22-fpm
+FROM php:8.2-fpm-alpine
 
 LABEL maintainer="cesaralejo@gmail.com"
-LABEL version="1.0.0"
-LABEL description="Imagen base PHP-FPM"
+LABEL version="1.0.1"
+LABEL description="PHP-FPM: Composer, Laravel, PostgreSQL, LDAP y SMTP"
 
-# Arguments defined in docker-compose.yml
-ARG user
-ARG uid
-
-# Set working directory
-WORKDIR /var/www
-
-# Establece la zona horaria (ejemplo: UTC)
-ENV TZ=America/Bogota
-
-# Install system dependencies utf8_mime2text
-#oniguruma-dev
-#libsasl2-dev \
-#libsasl2-modules \
-#libwebp-dev \
-#libxpm-dev \
-#libgd-dev \
-#zlib1g-dev \
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    locales \
-    zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    libzip-dev \
+# Install system dependencies (Composer, Laravel, PostgreSQL, LDAP y SMTP)
+RUN apk add --no-cache \
+    curl \
     unzip \
     git \
-    curl \
-    #IMAP
-    libssl-dev \
-    libicu-dev \
-    libc-client-dev \
-    libkrb5-dev \
-    #PGSQL
-    libpq-dev \
-    #LDAP
-    libldap2-dev \
+    g++ \
+    make \
+    libzip-dev \
+    zip \
+    libpng-dev \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    libxpm-dev \
+    oniguruma-dev \
+    postgresql-dev \
     libxml2-dev \
-    libonig-dev
+    zlib-dev \
+    icu-dev \
+    tzdata \
+    openldap-dev \
+    msmtp \
+    bash
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Config zona horaria a America/Bogota. | tzdata
+RUN cp /usr/share/zoneinfo/America/Bogota /etc/localtime \
+    && echo "America/Bogota" > /etc/timezone
 
-# Install PHP extensions | pdo_mysql
-RUN docker-php-ext-install mbstring exif pcntl bcmath zip
+# Install PHP extensions | pdo_mysql | pcntl | tokenizer xml ctype
+RUN docker-php-ext-install \
+    pdo \
+    pdo_pgsql \
+    gd \
+    zip \
+    opcache \
+    mbstring \
+    exif \
+    bcmath \
+    fileinfo \
+    dom \
+    intl \
+    ldap
 
-RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
-RUN docker-php-ext-install pdo pdo_pgsql pgsql
+# Descarga e instala Composer globalmente.
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
-RUN docker-php-ext-install ldap
-
-RUN docker-php-ext-configure intl
-RUN docker-php-ext-install intl
-
-RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
-RUN docker-php-ext-install imap
-
-# --with-webp --with-xpm
-RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
-RUN docker-php-ext-install -j$(nproc) gd
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer --ansi --version --no-interaction
-
-# Copy composer.lock and composer.json
-#COPY ./src/composer.lock ./src/composer.json /var/www/
-
-# Create system user to run Composer and Artisan Commands
-#RUN useradd -G www-data,root -u $uid -d /home/$user $user
-#RUN mkdir -p /home/$user/.composer && \
-#    chown -R $user:$user /home/$user
+# Set working directory
+WORKDIR /var/www/html
 
 # Copy the applicaton code directory contents to the working directory
-COPY ./src /var/www
+COPY ./src .
+
+# Instala las dependencias de Composer.
+# --no-dev: Excluye las dependencias de desarrollo.
+# --no-interaction: No pide entrada interactiva.
+# --optimize-autoloader: Genera un autoloader optimizado para producción.
+# --prefer-dist: Descarga paquetes desde sus archivos distribuidos cuando sea posible.
+RUN composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist
 
 # Set permissions of the working directory to the www-data user
-RUN chown -R www-data:www-data \ 
-    /var/www/upload
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/upload \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/upload
 
-# Assign writing permissions to logs and framework directories
-RUN chmod 775 -R /var/www/upload
-
-# Install project dependencies | --no-autoloader --no-ansi --no-interaction --no-progress --no-scripts
-# RUN composer install --optimize-autoloader --no-dev
-
-#RUN php artisan key:generate
-#RUN php artisan storage:link
-#RUN php artisan migrate
-
-#RUN composer require laravel/octane spiral/roadrunner
-#RUN php artisan octane:install --server="swoole"
-
-# Actualiza la hora del sistema
-RUN ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && \
-    echo $TZ > /etc/timezone
-
-# Expose port 9000 and start php-fpm server
+# Expose port 9000
 EXPOSE 9000
+
+# By default, the container start php-fpm
 CMD ["php-fpm"]
-
-# Server Octane
-#RUN php artisan actane:install --server="swoole"
-
-#CMD php artisan octane:start --server="swoole" --host="0.0.0.0"
-#EXPOSE 8000
